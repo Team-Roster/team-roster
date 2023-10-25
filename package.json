@@ -1,0 +1,26 @@
+{
+  "name": "team-roster",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./src/index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:dev": "node --watch ./src/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^5.5.0"
+  },
+  "devDependencies": {
+    "prisma": "^5.5.0"
+  },
+  "prisma": {
+    "schema": "src/infra/db/schema.prisma"
+  },
+  "imports": {
+    "#*": "./src/*"
+  }
+}
