@@ -1,3 +1,5 @@
+import eventService from "#services/eventService.js";
+
 export default () => {
   return {
     create: async function (data) {

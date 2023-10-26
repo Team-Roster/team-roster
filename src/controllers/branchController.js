@@ -1,3 +1,5 @@
+import branchService from "#services/branchService.js";
+
 export default () => {
   return {
     create: async function (data) {

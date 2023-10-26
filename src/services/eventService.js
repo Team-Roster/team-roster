@@ -1,4 +1,4 @@
-import events from "#/models/events";
+import events from "#models/events.js";
 
 export default () => {
   return {};

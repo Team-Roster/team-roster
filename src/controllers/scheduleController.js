@@ -1,3 +1,5 @@
+import scheduleService from "#services/scheduleService.js";
+
 export default () => {
   return {
     create: async function (data) {

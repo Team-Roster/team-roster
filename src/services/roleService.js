@@ -1,4 +1,4 @@
-import roles from "#/models/roles";
+import roles from "#models/roles.js";
 
 export default () => {
   return {};

@@ -1,1 +1,3 @@
-export const events = [];
+const events = [];
+
+export default events;

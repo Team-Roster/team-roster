@@ -1,3 +1,5 @@
+import teamService from "#services/teamService.js";
+
 export default () => {
   return {
     create: async function (data) {

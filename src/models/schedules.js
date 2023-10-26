@@ -1,1 +1,3 @@
-export const schedules = [];
+const schedules = [];
+
+export default schedules;

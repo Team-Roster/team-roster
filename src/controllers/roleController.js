@@ -1,3 +1,5 @@
+import roleService from "#services/roleService.js";
+
 export default () => {
   return {
     create: async function (data) {

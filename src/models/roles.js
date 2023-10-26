@@ -7,3 +7,5 @@ const roles = [
   { id: 5, name: "Telão / Letras" },
   { id: 6, name: "Luz" },
 ];
+
+export default roles;
