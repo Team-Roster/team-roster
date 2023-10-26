@@ -1,4 +1,5 @@
 import fastify from "#infra/server.js";
+
 import branchRoutes from "#routes/branch/branchRoutes.js";
 import eventRoutes from "#routes/event/eventRoutes.js";
 import roleRoutes from "#routes/role/roleRoutes.js";
