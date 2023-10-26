@@ -1,1 +1,1 @@
-export const teams = [];
+export const teams = [{ id: 0, team_name: "AudioVisual" }];

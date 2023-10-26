@@ -12,7 +12,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@prisma/client": "^5.5.0"
+    "@prisma/client": "^5.5.0",
+    "fastify": "^4.24.3",
+    "fastify-list-routes": "^1.0.0"
   },
   "devDependencies": {
     "prisma": "^5.5.0"
@@ -21,6 +23,8 @@
     "schema": "src/infra/db/schema.prisma"
   },
   "imports": {
-    "#*": "./src/*"
+    "#*": "./src/*",
+    "#infra": "./src/infra/*",
+    "#routes": "./src/routes/*"
   }
 }
