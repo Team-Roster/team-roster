@@ -24,7 +24,10 @@
   },
   "imports": {
     "#*": "./src/*",
+    "#controllers": "./src/controllers/*",
     "#infra": "./src/infra/*",
-    "#routes": "./src/routes/*"
+    "#models": "./src/models/*",
+    "#routes": "./src/routes/*",
+    "#services": "./src/services/*"
   }
 }

@@ -8,7 +8,10 @@ const fastify = Fastify({
 
 export const start = async () => {
   try {
-    await fastify.register(fastifyListRoutes, { colors: true });
+    if (process.env.APP_ENV === "local") {
+      await fastify.register(fastifyListRoutes, { colors: true });
+    }
+
     await registerRoutes();
     await fastify.listen({ port: process.env.APP_PORT });
   } catch (err) {
