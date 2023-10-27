@@ -1,4 +1,4 @@
-import fastify from "#infra/server.js";
+import fastify from "#infra/server.ts";
 
 import branchRoutes from "#routes/branch/branchRoutes.js";
 import eventRoutes from "#routes/event/eventRoutes.js";

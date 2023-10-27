@@ -1,9 +1,22 @@
 import Fastify from "fastify";
 import fastifyListRoutes from "fastify-list-routes";
+import { buildJsonSchemas, register } from "fastify-zod";
 import registerRoutes from "#routes/index.js";
+import schemas from "#routes/schemas.js";
 
 const fastify = Fastify({
-  logger: true,
+  // logger: true,
+});
+
+await register(fastify, {
+  jsonSchemas: buildJsonSchemas(schemas),
+  swaggerOptions: {
+    // See https://github.com/fastify/fastify-swagger
+  },
+  swaggerUiOptions: {
+    // See https://github.com/fastify/fastify-swagger-ui
+  },
+  transformSpec: {}, // optional, see below
 });
 
 export const start = async () => {
@@ -11,10 +24,12 @@ export const start = async () => {
     if (process.env.APP_ENV === "local") {
       await fastify.register(fastifyListRoutes, { colors: true });
     }
+    
+    await registerRoutes(fastify);
 
-    await registerRoutes();
     await fastify.listen({ port: process.env.APP_PORT });
   } catch (err) {
+    console.log(err);
     fastify.log.error(err);
     process.exit(1);
   }

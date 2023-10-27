@@ -6,28 +6,42 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:dev": "node --watch --env-file=.env ./src/index.js"
+    "start": "tsx ./src/index.js",
+    "start:dev": "tsx watch ./src/index.ts",
+    "build": "tsup ./src",
+    "old-start:dev": "node --watch --env-file=.env ./src/index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "^5.5.0",
+    "dotenv": "^16.3.1",
     "fastify": "^4.24.3",
-    "fastify-list-routes": "^1.0.0"
+    "fastify-list-routes": "^1.0.0",
+    "fastify-zod": "^1.4.0",
+    "module-alias": "^2.2.3"
   },
   "devDependencies": {
-    "prisma": "^5.5.0"
-  },
-  "prisma": {
-    "schema": "src/infra/db/schema.prisma"
+    "prisma": "^5.5.0",
+    "tsup": "^7.2.0",
+    "tsx": "^3.14.0",
+    "typescript": "^5.2.2"
   },
   "imports": {
-    "#*": "./src/*",
-    "#controllers": "./src/controllers/*",
-    "#infra": "./src/infra/*",
-    "#models": "./src/models/*",
-    "#routes": "./src/routes/*",
-    "#services": "./src/services/*"
+    "#*": "./dist/*",
+    "#controllers": "./dist/controllers/*",
+    "#infra": "./dist/infra/*",
+    "#models": "./dist/models/*",
+    "#routes": "./dist/routes/*",
+    "#services": "./dist/services/*"
+  },
+  "_moduleAliases": {
+    "#*": "./dist/*",
+    "#controllers": "./dist/controllers/*",
+    "#infra": "./dist/infra/*",
+    "#models": "./dist/models/*",
+    "#routes": "./dist/routes/*",
+    "#services": "./dist/services/*"
   }
 }
