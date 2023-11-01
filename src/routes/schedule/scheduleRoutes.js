@@ -8,8 +8,7 @@ export default function (fastify, opts, done) {
   });
 
   fastify.zod.post("/schedule", { body: "create" }, async (request, reply) => {
-    console.log(request.body);
-    return await scheduleController().create({});
+    return await scheduleController().create(request.body);
   });
 
   fastify.patch("/:id", async (request, reply) => {

@@ -3,7 +3,7 @@ import scheduleService from "#services/scheduleService.js";
 export default () => {
   return {
     create: async function (data) {
-      return { create: data };
+      return await scheduleService().make(data);
     },
     get: async function (id) {
       return { get: id };

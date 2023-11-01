@@ -16,10 +16,12 @@
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "^5.5.0",
+    "dayjs": "^1.11.10",
     "dotenv": "^16.3.1",
     "fastify": "^4.24.3",
     "fastify-list-routes": "^1.0.0",
     "fastify-zod": "^1.4.0",
+    "lodash.sample": "^4.2.1",
     "module-alias": "^2.2.3"
   },
   "devDependencies": {
