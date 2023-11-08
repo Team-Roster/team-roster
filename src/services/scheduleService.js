@@ -136,6 +136,7 @@ export default () => {
   return {
     createSchedule: async function (data) {
       try {
+        console.log(await schedules().getSchedules());
         const { start, end, branch, team } = data;
 
         let events = [];

@@ -6,26 +6,44 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
 model Events {
-  id Int @id @default(autoincrement())
+  id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
 
 model Roles {
-  id Int @id @default(autoincrement())
+  id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
 
 model Schedules {
-  id Int @id @default(autoincrement())
+  id             Int      @id @default(autoincrement())
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+  name           String
+  when           String
+  time           String
+  recurrence     String
+  required_roles Json?
+  declined_by    Json?
+  users_loked    Json?
+  team           Json?
 }
 
 model Teams {
-  id Int @id @default(autoincrement())
+  id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
 
 model Users {
-  id Int @id @default(autoincrement())
+  id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
