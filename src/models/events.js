@@ -13,10 +13,11 @@ const days = {
 const events = [
   {
     name: "Culto da Familia",
-    when: "2023-11-04",
+    when: "2023-11-05",
     time: "18:00",
     recurrence: "weekly",
     required_roles: [0, 1, 2, 3, 4, 5, 6],
+    declined_by: [],
   },
   {
     name: "Engate a Quinta",
@@ -24,6 +25,15 @@ const events = [
     time: "20:00",
     recurrence: "weekly",
     required_roles: [0, 2, 3, 4, 5, 6],
+    declined_by: [],
+  },
+  {
+    name: "Culto de Mulheres",
+    when: "2023-11-28",
+    time: "20:00",
+    recurrence: "once",
+    required_roles: [0, 2, 3, 4, 5, 6],
+    declined_by: [],
   },
 ];
 

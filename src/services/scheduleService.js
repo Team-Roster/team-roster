@@ -1,11 +1,6 @@
 /** @format */
 import sample from "lodash.sample";
-import dayjs, {
-  dbDate,
-  dbDateTime,
-  getDates,
-  organizeDates,
-} from "#infra/plugins/dayjs.js";
+import dayjs, { getDates, organizeDates } from "#infra/plugins/dayjs.js";
 import schedules from "#models/schedules.js";
 import userService from "#services/userService.js";
 import eventService from "#services/eventService.js";
@@ -20,6 +15,7 @@ const setWeeklyRecurrence = async function (event, end) {
       result.push({
         ...event,
         when: date.date,
+        users_loked: [],
       });
     }
   }
@@ -35,116 +31,134 @@ const getRandom = (users, role) => {
   return sample(usersWhoHaveRole.map((i) => i.id));
 };
 
-const makeRandomSort = async (schedule) => {
-  let result = [];
-  for await (let item of schedule) {
-    item.team = [];
-    let userSorted = [];
-    for await (let role of item.required_roles) {
-      let s = await sortUserByRole(role, userSorted, item);
-      userSorted.push(s.user);
-      item.team.push(s);
-    }
-    result.push(item);
-  }
-
-  result = validations(result);
-
-  return result;
-};
-
-const doExcludeUsersFromDay = async () => {
-  return {
-    role: null,
-    user: null,
-    users_loked: [],
-  };
-};
-
-const excludeUsersFromDay = async (data) => {
-  for await (let item of data) {
-    let weekday = dayjs(item.when).weekday();
-    console.log(item.team, weekday);
-  }
-
-  // users.map(() => {});
-  // return { users, item };
-  // console.log(data);
-  return data;
-};
-
-const sortUserByRole = async (role, exclude) => {
-  let users = await userService().usersByRole(role);
-
-  let sorteio = getRandom(users, role);
+const sortUserByRole = async (role, users, exclude) => {
+  let election = getRandom(users, role);
   let includes = true;
 
   let tries = 0;
 
   while (includes) {
-    sorteio = getRandom(users, role);
-    includes = exclude.includes(sorteio);
+    election = getRandom(users, role);
+    includes = exclude.includes(election);
     tries++;
     if (tries === 100) break;
   }
 
-  return {
-    role,
-    user: sorteio,
-  };
+  return election;
 };
 
-const getDuplicates = (team) => {
-  return Object.values(
-    team.reduce((c, v) => {
-      let k = v.user;
-      c[k] = c[k] || [];
-      c[k].push(v);
-      return c;
-    }, {})
-  ).reduce((c, v) => (v.length > 1 ? c.concat(v) : c), []);
-};
+const prepareEvents = async (start, end) => {
+  const events = await eventService().list(start, end);
 
-const removeDuplicates = async (data) => {
-  for (let item of data) {
-    const { team } = item;
+  let schedule = [];
 
-    var duplicates = getDuplicates(team);
-
-    if (duplicates.length === 0) continue;
-
-    console.log({ team, duplicates });
+  for await (let event of events) {
+    if (event.recurrence === "weekly") {
+      let items = await setWeeklyRecurrence(event, end);
+      schedule = [...schedule, ...items];
+    }
+    if (event.recurrence === "once") {
+      schedule = [...schedule, event];
+    }
   }
-  return data;
+
+  return organizeDates(schedule);
 };
 
-const validations = async (data) => {
-  data = await removeDuplicates(data);
+const prepareTeam = async (requiredRoles) => {
+  const result = [];
+  for (let item of requiredRoles) {
+    result.push({
+      role: item,
+      user: null,
+    });
+  }
+  return result;
+};
+
+const prepareUsers = async (events, branch, team) => {
+  const result = [];
+
+  for (let event of events) {
+    let users = await userService(branch, team).usersByRoles(
+      event.required_roles
+    );
+
+    result.push({
+      ...event,
+      users: await verifyUserAvailability(users, event),
+      team: await prepareTeam(event.required_roles),
+    });
+  }
+
+  return result;
+};
+
+const verifyUserAvailability = async (users, event) => {
+  const result = [];
+  let weekday = dayjs(event.when).weekday();
+
+  for (let user of users) {
+    if (!user.exclude_me_on_days_that_are.includes(weekday)) {
+      result.push(user);
+    }
+  }
+
+  return result;
+};
+
+const getUserByRole = async (users, role) => {
+  return users.filter((user) => {
+    return user.roles.includes(role);
+  });
+};
+
+const teamElection = async (team, data) => {
+  let exclude = [];
+  for (let i in team) {
+    const users = await getUserByRole(data.users, team[i].role);
+    const sorted = await sortUserByRole(team[i].role, users, exclude);
+    exclude.push(sorted);
+    team[i].user = sorted;
+  }
+
+  return team;
+};
+
+const mekaElection = async (data) => {
+  for (let i in data) {
+    data[i].team = await teamElection(data[i].team, data[i]);
+  }
   return data;
 };
 
 export default () => {
   return {
-    make: async function (data) {
-      const { start, end } = data;
+    createSchedule: async function (data) {
+      try {
+        const { start, end, branch, team } = data;
 
-      const events = await eventService().list();
+        let events = [];
 
-      let schedule = [];
+        events = await prepareEvents(start, end);
+        events = await prepareUsers(events, branch, team);
 
-      for await (let event of events) {
-        if (event.recurrence === "weekly") {
-          let items = await setWeeklyRecurrence(event, end);
-          schedule = [...schedule, ...items];
-        }
+        const result = await mekaElection(events);
+
+        return result.map((i) => ({
+          name: i.name,
+          when: i.when,
+          time: i.time,
+          recurrence: i.recurrence,
+          required_roles: i.required_roles,
+          declined_by: i.declined_by,
+          users_loked: i.users_loked,
+          team: i.team,
+        }));
+      } catch (e) {
+        console.log(e);
+        return e;
       }
-
-      schedule = organizeDates(schedule);
-      schedule = await makeRandomSort(schedule);
-      schedule = await excludeUsersFromDay(schedule);
-      schedule = await validations(schedule);
-
-      return schedule;
     },
   };
 };
