@@ -1,3 +1,5 @@
+/** @format */
+
 import { z } from "zod";
 
 const create = z.object({
@@ -7,6 +9,12 @@ const create = z.object({
   end: z.date(),
 });
 
+const list = z.object({
+  branch: z.number(),
+  team: z.number(),
+});
+
 export default {
-  create,
+  "schedule.create": create,
+  "schedule.list": list,
 };

@@ -136,30 +136,49 @@ export default () => {
   return {
     createSchedule: async function (data) {
       try {
-        console.log(await schedules().getSchedules());
         const { start, end, branch, team } = data;
 
         let events = [];
+        let result = [];
 
         events = await prepareEvents(start, end);
         events = await prepareUsers(events, branch, team);
 
-        const result = await mekaElection(events);
+        const election = await mekaElection(events);
 
-        return result.map((i) => ({
-          name: i.name,
-          when: i.when,
-          time: i.time,
-          recurrence: i.recurrence,
-          required_roles: i.required_roles,
-          declined_by: i.declined_by,
-          users_loked: i.users_loked,
-          team: i.team,
-        }));
+        for (let i of election) {
+          let obj = {
+            // id: i.id || null,
+            name: i.name,
+            when: i.when,
+            time: i.time,
+            recurrence: i.recurrence,
+            required_roles: i.required_roles,
+            declined_by: i.declined_by,
+            users_loked: i.users_loked,
+            schedule: i.team,
+            branch,
+            team,
+          };
+
+          result.push(await schedules().create(obj));
+        }
+
+        return result;
       } catch (e) {
         console.log(e);
         return e;
       }
+    },
+    updateSchedule: async function () {
+      // const { id, name, when, time } = i;
+      // let where = { id, name, when, time };
+      // let update = obj;
+      // let create = obj;
+      // result.push(await schedules().firstOrCreate(where, update, create));
+    },
+    list: async function (branch, team) {
+      return await schedules().where({ branch, team });
     },
   };
 };

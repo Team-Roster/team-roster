@@ -10,6 +10,10 @@ export default () => {
     get: async function (id) {
       return { get: id };
     },
+    list: async function (branch, team) {
+      // parseInt(branch), parseInt(team)
+      return await scheduleService().list(branch, team);
+    },
     delete: async function (id) {
       return { delete: id };
     },

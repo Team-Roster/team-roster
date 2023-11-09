@@ -33,7 +33,11 @@ model Schedules {
   required_roles Json?
   declined_by    Json?
   users_loked    Json?
-  team           Json?
+  schedule       Json?
+  branch         Int      @default(0)
+  team           Int      @default(0)
+
+  @@unique([branch, team, name, when, time])
 }
 
 model Teams {

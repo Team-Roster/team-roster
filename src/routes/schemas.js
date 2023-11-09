@@ -1,3 +1,5 @@
+/** @format */
+
 import scheduleSchemas from "./schedule/scheduleSchemas.js";
 
 export default {
