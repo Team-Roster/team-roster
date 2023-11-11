@@ -3,10 +3,14 @@
 import scheduleController from "#controllers/scheduleController.js";
 
 export default function (fastify, opts, done) {
-  fastify.get("/:id", async (request, reply) => {
-    const { id } = request.params;
-    return await scheduleController().get(id);
-  });
+  fastify.zod.get(
+    "/:id",
+    { params: "schedule.get" },
+    async (request, reply) => {
+      const { id } = request.params;
+      return await scheduleController().get(id);
+    }
+  );
 
   fastify.zod.post(
     "/schedule",
@@ -16,23 +20,31 @@ export default function (fastify, opts, done) {
     }
   );
 
-  fastify.patch("/:id", async (request, reply) => {
-    const { id } = request.params;
-    const { data } = request.params;
-    return await scheduleController().update(id, data);
-  });
+  fastify.zod.patch(
+    "/:id",
+    { params: "schedule.updateId", body: "schedule.updateData" },
+    async (request, reply) => {
+      const { id } = request.params;
+      const { data } = request.params;
+      return await scheduleController().update(id, data);
+    }
+  );
 
-  fastify.delete("/:id", async (request, reply) => {
-    const { id } = request.params;
-    return await scheduleController().delete(id);
-  });
+  fastify.zod.delete(
+    "/:id",
+    { params: "schedule.delete" },
+    async (request, reply) => {
+      const { id } = request.params;
+      return await scheduleController().delete(id);
+    }
+  );
 
   fastify.zod.get(
     "/schedule/branch/:branch/team/:team",
     { params: "schedule.list" },
     async (request, reply) => {
       const { branch, team } = request.params;
-      return await scheduleController().list(branch, team);
+      return await scheduleController().list(branch, team, request.query);
     }
   );
 
