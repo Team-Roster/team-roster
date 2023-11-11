@@ -53,10 +53,14 @@ model Branches {
   id             Int             @id @default(autoincrement())
   created_at     DateTime        @default(now())
   updated_at     DateTime        @updatedAt
+  name           String
+  document       String          @unique
   clients        Clients         @relation(fields: [client_id], references: [id])
   client_id      Int
   users_branches UsersBranches[]
   teams          Teams[]
+
+  @@unique([document, client_id])
 }
 
 model Teams {
