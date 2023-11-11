@@ -4,7 +4,7 @@ import scheduleController from "#controllers/scheduleController.js";
 
 export default function (fastify, opts, done) {
   fastify.zod.get(
-    "/:id",
+    "/schedule/:id",
     { params: "schedule.get" },
     async (request, reply) => {
       const { id } = request.params;
@@ -21,7 +21,7 @@ export default function (fastify, opts, done) {
   );
 
   fastify.zod.patch(
-    "/:id",
+    "/schedule/:id",
     { params: "schedule.updateId", body: "schedule.updateData" },
     async (request, reply) => {
       const { id } = request.params;
@@ -31,7 +31,7 @@ export default function (fastify, opts, done) {
   );
 
   fastify.zod.delete(
-    "/:id",
+    "/schedule/:id",
     { params: "schedule.delete" },
     async (request, reply) => {
       const { id } = request.params;

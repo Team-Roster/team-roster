@@ -44,6 +44,8 @@ model Clients {
   id         Int        @id @default(autoincrement())
   created_at DateTime   @default(now())
   updated_at DateTime   @updatedAt
+  name       String
+  document   String     @unique
   branches   Branches[]
 }
 

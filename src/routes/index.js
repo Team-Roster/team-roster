@@ -1,3 +1,5 @@
+/** @format */
+
 import fastify from "#infra/server.ts";
 
 import branchRoutes from "#routes/branch/branchRoutes.js";
@@ -6,6 +8,7 @@ import roleRoutes from "#routes/role/roleRoutes.js";
 import scheduleRoutes from "#routes/schedule/scheduleRoutes.js";
 import teamRoutes from "#routes/team/teamRoutes.js";
 import userRoutes from "#routes/user/userRoutes.js";
+import clientRoutes from "#routes/client/clientRoutes.js";
 
 const registerRoutes = async () => {
   fastify.register(userRoutes, { prefix: "/user" });
@@ -14,6 +17,7 @@ const registerRoutes = async () => {
   fastify.register(roleRoutes, { prefix: "/role" });
   fastify.register(scheduleRoutes, { prefix: "/schedule" });
   fastify.register(teamRoutes, { prefix: "/team" });
+  fastify.register(clientRoutes, { prefix: "/client" });
 
   fastify.get("/", async (request, reply) => {
     return {
