@@ -3,6 +3,8 @@ import fastifyListRoutes from "fastify-list-routes";
 import { buildJsonSchemas, register } from "fastify-zod";
 import registerRoutes from "#routes/index.js";
 import schemas from "#routes/schemas.js";
+import { env } from 'node:process';
+
 
 const fastify = Fastify({
   // logger: true,
@@ -26,8 +28,8 @@ export const start = async () => {
     }
     
     await registerRoutes(fastify);
-
-    await fastify.listen({ port: process.env.APP_PORT });
+    
+    await fastify.listen({ port: process.env.APP_PORT | 9000 });
   } catch (err) {
     console.log(err);
     fastify.log.error(err);
