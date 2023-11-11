@@ -40,14 +40,62 @@ model Schedules {
   @@unique([branch, team, name, when, time])
 }
 
+model Clients {
+  id         Int        @id @default(autoincrement())
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
+  branches   Branches[]
+}
+
+model Branches {
+  id             Int             @id @default(autoincrement())
+  created_at     DateTime        @default(now())
+  updated_at     DateTime        @updatedAt
+  clients        Clients         @relation(fields: [client_id], references: [id])
+  client_id      Int
+  users_branches UsersBranches[]
+  teams          Teams[]
+}
+
 model Teams {
-  id         Int      @id @default(autoincrement())
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  id         Int          @id @default(autoincrement())
+  created_at DateTime     @default(now())
+  updated_at DateTime     @updatedAt
+  users_team UsersTeams[]
+  branches   Branches     @relation(fields: [branch_id], references: [id])
+  branch_id  Int
 }
 
 model Users {
-  id         Int      @id @default(autoincrement())
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  id                          Int             @id @default(autoincrement())
+  created_at                  DateTime        @default(now())
+  updated_at                  DateTime        @updatedAt
+  name                        String
+  roles                       Json?
+  max_sequential              Int?            @default(1)
+  exclude_me_on_days_that_are Json?
+  users_team                  UsersTeams[]
+  users_branches              UsersBranches[]
+}
+
+model UsersTeams {
+  user        Users    @relation(fields: [user_id], references: [id])
+  user_id     Int
+  team        Teams    @relation(fields: [team_id], references: [id])
+  team_id     Int
+  assigned_at DateTime @default(now())
+  assigned_by String
+
+  @@id([user_id, team_id])
+}
+
+model UsersBranches {
+  user        Users    @relation(fields: [user_id], references: [id])
+  user_id     Int
+  branches    Branches @relation(fields: [branch_id], references: [id])
+  branch_id   Int
+  assigned_at DateTime @default(now())
+  assigned_by String
+
+  @@id([user_id, branch_id])
 }
