@@ -1,3 +1,5 @@
+/** @format */
+
 import eventService from "#services/eventService.js";
 
 export default () => {

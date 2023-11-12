@@ -1,3 +1,5 @@
+/** @format */
+
 import eventController from "#controllers/eventController.js";
 
 export default function (fastify, opts, done) {
@@ -7,7 +9,7 @@ export default function (fastify, opts, done) {
   });
 
   fastify.post("/", async (request, reply) => {
-    return await eventController().create(request);
+    return await eventController().create({});
   });
 
   fastify.patch("/:id", async (request, reply) => {

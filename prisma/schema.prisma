@@ -10,19 +10,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Events {
+model events {
   id         Int      @id @default(autoincrement())
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 }
 
-model Roles {
+model roles {
   id         Int      @id @default(autoincrement())
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 }
 
-model Schedules {
+model schedules {
   id             Int      @id @default(autoincrement())
   created_at     DateTime @default(now())
   updated_at     DateTime @updatedAt
@@ -40,55 +40,67 @@ model Schedules {
   @@unique([branch, team, name, when, time])
 }
 
-model Clients {
+model clients {
   id         Int        @id @default(autoincrement())
   created_at DateTime   @default(now())
   updated_at DateTime   @updatedAt
   name       String
   document   String     @unique
-  branches   Branches[]
+  branches   branches[]
 }
 
-model Branches {
-  id             Int             @id @default(autoincrement())
-  created_at     DateTime        @default(now())
-  updated_at     DateTime        @updatedAt
+model branches {
+  id             Int              @id @default(autoincrement())
+  created_at     DateTime         @default(now())
+  updated_at     DateTime         @updatedAt
   name           String
-  document       String          @unique
-  clients        Clients         @relation(fields: [client_id], references: [id])
+  document       String           @unique
+  clients        clients          @relation(fields: [client_id], references: [id])
   client_id      Int
-  users_branches UsersBranches[]
-  teams          Teams[]
+  users_branches users_branches[]
+  teams          teams[]
 
   @@unique([document, client_id])
 }
 
-model Teams {
-  id         Int          @id @default(autoincrement())
-  created_at DateTime     @default(now())
-  updated_at DateTime     @updatedAt
-  name       String
-  users_team UsersTeams[]
-  branches   Branches     @relation(fields: [branch_id], references: [id])
-  branch_id  Int
+model teams {
+  id          Int           @id @default(autoincrement())
+  created_at  DateTime      @default(now())
+  updated_at  DateTime      @updatedAt
+  name        String
+  users_team  users_teams[]
+  event_roles event_roles[]
+  branches    branches      @relation(fields: [branch_id], references: [id])
+  branch_id   Int
 }
 
-model Users {
-  id                          Int             @id @default(autoincrement())
-  created_at                  DateTime        @default(now())
-  updated_at                  DateTime        @updatedAt
+model users {
+  id                          Int              @id @default(autoincrement())
+  created_at                  DateTime         @default(now())
+  updated_at                  DateTime         @updatedAt
   name                        String
   roles                       Json?
-  max_sequential              Int?            @default(1)
+  max_sequential              Int?             @default(1)
   exclude_me_on_days_that_are Json?
-  users_team                  UsersTeams[]
-  users_branches              UsersBranches[]
+  users_team                  users_teams[]
+  users_branches              users_branches[]
 }
 
-model UsersTeams {
-  user        Users    @relation(fields: [user_id], references: [id])
+model event_roles {
+  id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  name       String
+  teams      teams    @relation(fields: [team_id], references: [id])
+  team_id    Int
+
+  @@unique([name, team_id])
+}
+
+model users_teams {
+  user        users    @relation(fields: [user_id], references: [id])
   user_id     Int
-  team        Teams    @relation(fields: [team_id], references: [id])
+  team        teams    @relation(fields: [team_id], references: [id])
   team_id     Int
   assigned_at DateTime @default(now())
   assigned_by String
@@ -96,10 +108,10 @@ model UsersTeams {
   @@id([user_id, team_id])
 }
 
-model UsersBranches {
-  user        Users    @relation(fields: [user_id], references: [id])
+model users_branches {
+  user        users    @relation(fields: [user_id], references: [id])
   user_id     Int
-  branches    Branches @relation(fields: [branch_id], references: [id])
+  branches    branches @relation(fields: [branch_id], references: [id])
   branch_id   Int
   assigned_at DateTime @default(now())
   assigned_by String
