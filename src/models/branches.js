@@ -1,7 +1,5 @@
 /** @format */
 
-const branches = [{ id: 0, name: "Belmonte" }];
-
 import db from "#infra/db/connection";
 
 export default () => {

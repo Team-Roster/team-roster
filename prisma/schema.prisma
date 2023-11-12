@@ -67,6 +67,7 @@ model Teams {
   id         Int          @id @default(autoincrement())
   created_at DateTime     @default(now())
   updated_at DateTime     @updatedAt
+  name       String
   users_team UsersTeams[]
   branches   Branches     @relation(fields: [branch_id], references: [id])
   branch_id  Int
